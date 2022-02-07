@@ -1,13 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { FilesService } from './file.service';
-
-class PostDto {
-  fileName: string;
-  base64: string
-}
 
 @Controller()
 export class AppController {
@@ -22,10 +17,10 @@ export class AppController {
   }
 
   @Post('upload')
-  async uploadFile(@Body() postDto: PostDto) {
-    console.log("body", postDto)
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
 
-    // return this.fileService.uploadFile(postDto, 'firstFile')
-    return postDto
+    console.log("file", file)
+    console.log("fileBuffer", typeof file.buffer)
+    return this.fileService.uploadFile(file.buffer, file.originalname)
   }
 }
